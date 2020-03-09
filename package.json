@@ -1,16 +1,23 @@
 {
   "name": "@valearna/paginated-list",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Add pagination to a list of components",
   "main": "rollup.config.js",
   "directories": {
     "example": "example"
   },
   "dependencies": {
+    "@svgr/rollup": "^5.2.0",
     "react-bootstrap": "^1.0.0-beta.17",
-    "react-loading-overlay": "^1.0.1"
+    "react-loading-overlay": "^1.0.1",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-peer-deps-external": "^2.2.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-postcss": "^2.4.0",
+    "rollup-plugin-url": "^3.0.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
