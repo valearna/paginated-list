@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import withPaginatedList from 'paginated-list';
+import withPaginatedList from '@valearna/paginated-list';
 
 class Element extends React.Component {
   render() {
