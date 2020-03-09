@@ -14,13 +14,41 @@ npm install --save paginated-list
 
 ```jsx
 import React, { Component } from 'react'
+import withPaginatedList from 'paginated-list';
 
-import MyComponent from 'paginated-list'
-
-class Example extends Component {
-  render () {
+class Element extends React.Component {
+  render() {
     return (
-      <MyComponent />
+      <span>{this.props.element}</span>
+    );
+  }
+}
+
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      elements: ['Test1', 'Test2', 'Test3', 'Test4', 'Test5', 'Test6', 'Test7', 'Test8']
+    }
+  }
+
+
+  render () {
+    const PaginatedList = withPaginatedList(Element, (offset) => {
+      return new Promise(((resolve, reject ) => {
+          if (this.state.elements.length > offset) {
+            resolve({
+              elements: this.state.elements.slice(offset, offset + 5),
+              totNumElements: this.state.elements.length
+            });
+          } else {
+            resolve({elements: [], totNumElements: 0});
+          }})
+      )});
+    return (
+      <div>
+        <PaginatedList elemPerPage={5} />
+      </div>
     )
   }
 }
