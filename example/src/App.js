@@ -5,7 +5,7 @@ import withPaginatedList from 'paginated-list';
 class Element extends React.Component {
   render() {
     return (
-      <span>{this.props.text}</span>
+      <span>{this.props.element}</span>
     );
   }
 }
@@ -14,22 +14,26 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      elements: ['Test1, Test2', 'Test3, Test4', 'Test5, Test6', 'Test7, Test8']
+      elements: ['Test1', 'Test2', 'Test3', 'Test4', 'Test5', 'Test6', 'Test7', 'Test8']
     }
   }
 
 
   render () {
-    const PaginatedList = withPaginatedList(Element, (offset, count) => {
-      if (this.props.elements.length > offset + count) {
-        return this.props.elements.slice(offset, offset + count);
-      } else {
-        return []
-      }
-    });
+    const PaginatedList = withPaginatedList(Element, (offset) => {
+      return new Promise(((resolve, reject ) => {
+          if (this.state.elements.length > offset) {
+            resolve({
+              elements: this.state.elements.slice(offset, offset + 5),
+              totNumElements: this.state.elements.length
+            });
+          } else {
+            resolve({elements: [], totNumElements: 0});
+          }})
+      )});
     return (
       <div>
-        <PaginatedList />
+        <PaginatedList elemPerPage={5} />
       </div>
     )
   }

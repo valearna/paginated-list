@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, from 'react'
 import LoadingOverlay from 'react-loading-overlay';
 import {
   Badge, Button, Col, Container,
