@@ -1,6 +1,6 @@
 {
   "name": "paginated-list",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Add pagination to a list of React components",
   "author": "valearna",
   "license": "MIT",
