@@ -53,7 +53,7 @@ function withPaginatedList(WrappedComponent, loadDataPage) {
       this.setState({isLoading: true});
       loadDataPage(offset)
         .then(result => this.setState({elements: result.elements, totNumElements: result.totNumElements, isLoading: false}))
-        .catch(error=> {this.setState({isLoading: false}); alert(error)});
+        .catch(error=> {this.setState({isLoading: false})});
     }
 
     render() {
@@ -85,7 +85,7 @@ function withPaginatedList(WrappedComponent, loadDataPage) {
             this.setState({
               activePage: firstDisplayedPage - 1,
             });
-            loadData((firstDisplayedPage - 2) * this.props.elemPerPage);
+            this.loadData((firstDisplayedPage - 2) * this.props.elemPerPage);
           }}/>);
       }
 
@@ -96,7 +96,7 @@ function withPaginatedList(WrappedComponent, loadDataPage) {
                              this.setState({
                                activePage: number
                              });
-                             loadData((number - 1) * this.props.elemPerPage);
+                             this.loadData((number - 1) * this.props.elemPerPage);
                            }}>
             {number}
           </Pagination.Item>,
@@ -108,7 +108,7 @@ function withPaginatedList(WrappedComponent, loadDataPage) {
             this.setState({
               activePage: lastDisplayedPage + 1
             });
-            loadData((lastDisplayedPage) * this.props.elemPerPage);
+            this.loadData((lastDisplayedPage) * this.props.elemPerPage);
           }}/>);
       }
       return (
@@ -126,7 +126,7 @@ function withPaginatedList(WrappedComponent, loadDataPage) {
           >
             <Row>
               <Col sm="12">
-                <Form.Label># of elements in this list:</Form.Label> <Badge
+                <Form.Label>total number of items:</Form.Label> <Badge
                 variant="secondary">{this.state.totNumElements}</Badge>
               </Col>
             </Row>
@@ -145,7 +145,7 @@ function withPaginatedList(WrappedComponent, loadDataPage) {
                     if (this.state.activePage > 1) {
                       this.setState({
                         activePage: this.state.activePage - 1});
-                      loadData((parseInt(this.state.activePage) - 2) * parseInt(this.props.elemPerPage));
+                      this.loadData((parseInt(this.state.activePage) - 2) * parseInt(this.props.elemPerPage));
                     }
                   }}/>
                   {items}
@@ -153,13 +153,13 @@ function withPaginatedList(WrappedComponent, loadDataPage) {
                     if (this.state.activePage < Math.ceil(this.state.totNumElements / this.props.elemPerPage)) {
                       this.setState({
                         activePage: this.state.activePage + 1});
-                      loadData(parseInt(this.state.activePage) * parseInt(this.props.elemPerPage));
+                      this.loadData(parseInt(this.state.activePage) * parseInt(this.props.elemPerPage));
                     }
                   }}/>
                   <Pagination.Last onClick={() => {
                     this.setState({
                       activePage: Math.ceil(this.state.totNumElements / this.props.elemPerPage)});
-                    loadData((Math.ceil(this.state.totNumElements / this.props.elemPerPage) - 1) * this.props.elemPerPage);
+                    this.loadData((Math.ceil(this.state.totNumElements / this.props.elemPerPage) - 1) * this.props.elemPerPage);
                   }}/>
                 </Pagination>
               </Col>
