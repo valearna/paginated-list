@@ -9,7 +9,7 @@ import {
 } from 'react-bootstrap'
 import NumElemPerPageSelector from './NumElemPerPageSelector'
 
-function withPaginatedList(WrappedComponent, loadData) {
+function withPaginatedList(WrappedComponent, loadDataPage) {
 
   return class extends React.Component {
     constructor(props, context) {
@@ -21,12 +21,14 @@ function withPaginatedList(WrappedComponent, loadData) {
         pageValidationState: false,
         activePage: 1
       };
+
+      this.loadData = this.loadData.bind(this);
       this.resetList = this.resetList.bind(this);
       this.goToPage = this.goToPage.bind(this);
     }
 
     componentDidMount() {
-      loadData(0);
+      this.loadData(0);
     }
 
     componentDidUpdate(prevProps) {
@@ -37,20 +39,26 @@ function withPaginatedList(WrappedComponent, loadData) {
 
     resetList() {
       this.setState({activePage: 1});
-      loadData(0);
+      this.loadData(0);
     }
 
     goToPage(pageNum) {
       if (this.state.pageValidationState) {
-        this.setState({
-          activePage: pageNum});
-        loadData((pageNum - 1) * this.props.elemPerPage);
+        this.setState({activePage: pageNum});
+        this.loadData((pageNum - 1) * this.props.elemPerPage);
       }
+    }
+
+    loadData(offset) {
+      this.setState({isLoading: true});
+      loadDataPage(offset)
+        .then(result => this.setState({elements: result.elements, totNumElements: result.totNumElements, isLoading: false}))
+        .catch(error=> {this.setState({isLoading: false}); alert(error)});
     }
 
     render() {
       let numElemPerPageSelector = "";
-      if (this.props.showNumElemPerPageSelector === true) {
+      if (this.props.showNumElemPerPageSelector !== undefined) {
         numElemPerPageSelector = (
           <Container fluid>
             <Row>
