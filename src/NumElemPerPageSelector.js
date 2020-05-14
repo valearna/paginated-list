@@ -50,7 +50,7 @@ class NumElemPerPageSelector extends React.Component {
                   onKeyPress={(target) => {
                     if (target.key === 'Enter' &&
                       this.state.elemPerPage > 0) {
-                      this.props.setNumElemPerPageCallback(this.state.elemPerPage);
+                      this.props.setNumElemPerPageCallback(parseInt(this.state.elemPerPage));
                     }
                   }}
                 />
