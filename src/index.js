@@ -112,7 +112,7 @@ function withPaginatedList(WrappedComponent, loadDataPage) {
           }}/>);
       }
       return (
-        <Container>
+        <Container fluid>
           <LoadingOverlay
             active={this.state.isLoading}
             spinner
