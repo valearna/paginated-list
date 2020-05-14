@@ -57,7 +57,7 @@ class NumElemPerPageSelector extends React.Component {
                 <Button variant="outline-primary" size="sm" onClick={() => {
                   if (
                     this.state.elemPerPage > 0) {
-                    this.props.setNumElemPerPageCallback(this.state.elemPerPage);
+                    this.props.setNumElemPerPageCallback(parseInt(this.state.elemPerPage));
                   }
                 }}>Refresh</Button>
               </FormGroup>

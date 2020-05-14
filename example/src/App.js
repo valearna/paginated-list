@@ -20,7 +20,8 @@ export default class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      elements: ['Test1', 'Test2', 'Test3', 'Test4', 'Test5', 'Test6', 'Test7', 'Test8']
+      elements: ['Test1', 'Test2', 'Test3', 'Test4', 'Test5', 'Test6', 'Test7', 'Test8'],
+      elemPerPage: 5
     }
   }
 
@@ -29,7 +30,7 @@ export default class App extends Component {
       return new Promise((resolve, reject) => {
         if (this.state.elements.length > offset) {
           resolve({
-            elements: this.state.elements.slice(offset, offset + 5),
+            elements: this.state.elements.slice(offset, offset + this.state.elemPerPage),
             totNumElements: this.state.elements.length
           })
         } else {
@@ -40,7 +41,7 @@ export default class App extends Component {
     })
     return (
       <div>
-        <PaginatedList elemPerPage={5} />
+        <PaginatedList elemPerPage={this.state.elemPerPage} setNumElemPerPageCallback={(num) => this.setState({elemPerPage: num})} showNumElemPerPageSelector />
       </div>
     )
   }
