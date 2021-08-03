@@ -1,5 +1,5 @@
 import React from 'react'
-import LoadingOverlay from 'react-loading-overlay';
+import LoadingOverlay from 'react-loading-overlay'
 import {
   Badge, Button, Col, Container,
   Form, FormControl,
@@ -9,55 +9,54 @@ import {
 } from 'react-bootstrap'
 import NumElemPerPageSelector from './NumElemPerPageSelector'
 
-function withPaginatedList(WrappedComponent, loadDataPage) {
-
+function withPaginatedList(WrappedComponent, loadDataPage, header) {
   return class extends React.Component {
     constructor(props, context) {
-      super(props, context);
+      super(props, context)
       this.state = {
         elements: [],
         totNumElements: 0,
         isLoading: false,
         pageValidationState: false,
         activePage: 1
-      };
+      }
 
-      this.loadData = this.loadData.bind(this);
-      this.resetList = this.resetList.bind(this);
-      this.goToPage = this.goToPage.bind(this);
+      this.loadData = this.loadData.bind(this)
+      this.resetList = this.resetList.bind(this)
+      this.goToPage = this.goToPage.bind(this)
     }
 
     componentDidMount() {
-      this.loadData(0);
+      this.loadData(0)
     }
 
     componentDidUpdate(prevProps) {
       if (this.props !== prevProps) {
-        this.resetList();
+        this.resetList()
       }
     }
 
     resetList() {
-      this.setState({activePage: 1});
-      this.loadData(0);
+      this.setState({activePage: 1})
+      this.loadData(0)
     }
 
     goToPage(pageNum) {
       if (this.state.pageValidationState) {
-        this.setState({activePage: pageNum});
-        this.loadData((pageNum - 1) * this.props.elemPerPage);
+        this.setState({activePage: pageNum})
+        this.loadData((pageNum - 1) * this.props.elemPerPage)
       }
     }
 
     loadData(offset) {
-      this.setState({isLoading: true});
+      this.setState({isLoading: true})
       loadDataPage(offset)
         .then(result => this.setState({elements: result.elements, totNumElements: result.totNumElements, isLoading: false}))
-        .catch(error=> {this.setState({isLoading: false})});
+        .catch(error => { this.setState({isLoading: false}) })
     }
 
     render() {
-      let numElemPerPageSelector = "";
+      let numElemPerPageSelector = ''
       if (this.props.showNumElemPerPageSelector !== undefined) {
         numElemPerPageSelector = (
           <Container fluid>
@@ -67,49 +66,49 @@ function withPaginatedList(WrappedComponent, loadDataPage) {
               </Col>
             </Row>
             <Row>
-              <Col sm="12">
-                <NumElemPerPageSelector elemPerPage={this.props.elemPerPage} setNumElemPerPageCallback={this.props.setNumElemPerPageCallback}/>
+              <Col sm='12'>
+                <NumElemPerPageSelector elemPerPage={this.props.elemPerPage} setNumElemPerPageCallback={this.props.setNumElemPerPageCallback} />
               </Col>
             </Row>
-          </Container>);
+          </Container>)
       }
-      const maxNumPagesToDisplay = 5;
-      const totNumPages = Math.ceil(this.state.totNumElements / this.props.elemPerPage);
+      const maxNumPagesToDisplay = 5
+      const totNumPages = Math.ceil(this.state.totNumElements / this.props.elemPerPage)
       const firstDisplayedPage = Math.max(Math.min(this.state.activePage -
-        Math.floor(maxNumPagesToDisplay / 2), totNumPages - maxNumPagesToDisplay + 1), 1);
-      const lastDisplayedPage = Math.min(totNumPages, firstDisplayedPage + maxNumPagesToDisplay - 1);
-      let items = [];
+        Math.floor(maxNumPagesToDisplay / 2), totNumPages - maxNumPagesToDisplay + 1), 1)
+      const lastDisplayedPage = Math.min(totNumPages, firstDisplayedPage + maxNumPagesToDisplay - 1)
+      let items = []
       if (firstDisplayedPage > 1) {
         items.push(
           <Pagination.Ellipsis onClick={() => {
             this.setState({
-              activePage: firstDisplayedPage - 1,
-            });
-            this.loadData((firstDisplayedPage - 2) * this.props.elemPerPage);
-          }}/>);
+              activePage: firstDisplayedPage - 1
+            })
+            this.loadData((firstDisplayedPage - 2) * this.props.elemPerPage)
+          }} />)
       }
 
       for (let number = firstDisplayedPage; number <= lastDisplayedPage; number++) {
         items.push(
           <Pagination.Item key={number} active={number === this.state.activePage}
-                           onClick={() => {
-                             this.setState({
-                               activePage: number
-                             });
-                             this.loadData((number - 1) * this.props.elemPerPage);
-                           }}>
+            onClick={() => {
+              this.setState({
+                activePage: number
+              })
+              this.loadData((number - 1) * this.props.elemPerPage)
+            }}>
             {number}
-          </Pagination.Item>,
-        );
+          </Pagination.Item>
+        )
       }
       if (totNumPages > lastDisplayedPage) {
         items.push(
           <Pagination.Ellipsis onClick={() => {
             this.setState({
               activePage: lastDisplayedPage + 1
-            });
-            this.loadData((lastDisplayedPage) * this.props.elemPerPage);
-          }}/>);
+            })
+            this.loadData((lastDisplayedPage) * this.props.elemPerPage)
+          }} />)
       }
       return (
         <Container fluid>
@@ -125,57 +124,57 @@ function withPaginatedList(WrappedComponent, loadDataPage) {
             }}
           >
             <Row>
-              <Col sm="12">
+              <Col sm='12'>
                 <Form.Label>total number of items:</Form.Label> <Badge
-                variant="secondary">{this.state.totNumElements}</Badge>
+                  variant='secondary'>{this.state.totNumElements}</Badge>
               </Col>
             </Row>
             <Row>
-              <Col sm="12">
+              <Col sm='12'>
                 &nbsp;
               </Col>
             </Row>
             <Row>
-              <Col sm="12">
-                <Pagination size="sm">
+              <Col sm='12'>
+                <Pagination size='sm'>
                   <Pagination.First onClick={() => {
-                    this.resetList();
-                  }}/>
+                    this.resetList()
+                  }} />
                   <Pagination.Prev onClick={() => {
                     if (this.state.activePage > 1) {
                       this.setState({
-                        activePage: this.state.activePage - 1});
-                      this.loadData((parseInt(this.state.activePage) - 2) * parseInt(this.props.elemPerPage));
+                        activePage: this.state.activePage - 1})
+                      this.loadData((parseInt(this.state.activePage) - 2) * parseInt(this.props.elemPerPage))
                     }
-                  }}/>
+                  }} />
                   {items}
                   <Pagination.Next onClick={() => {
                     if (this.state.activePage < Math.ceil(this.state.totNumElements / this.props.elemPerPage)) {
                       this.setState({
-                        activePage: this.state.activePage + 1});
-                      this.loadData(parseInt(this.state.activePage) * parseInt(this.props.elemPerPage));
+                        activePage: this.state.activePage + 1})
+                      this.loadData(parseInt(this.state.activePage) * parseInt(this.props.elemPerPage))
                     }
-                  }}/>
+                  }} />
                   <Pagination.Last onClick={() => {
                     this.setState({
-                      activePage: Math.ceil(this.state.totNumElements / this.props.elemPerPage)});
-                    this.loadData((Math.ceil(this.state.totNumElements / this.props.elemPerPage) - 1) * this.props.elemPerPage);
-                  }}/>
+                      activePage: Math.ceil(this.state.totNumElements / this.props.elemPerPage)})
+                    this.loadData((Math.ceil(this.state.totNumElements / this.props.elemPerPage) - 1) * this.props.elemPerPage)
+                  }} />
                 </Pagination>
               </Col>
             </Row>
             <Row>
-              <Col sm="12">
+              <Col sm='12'>
                 Go to page:
                 <Form onSubmit={e => e.preventDefault()} inline>
                   <Form.Group>
                     <FormControl
-                      type="text" autoComplete="off" size="sm"
-                      placeholder={"1.." + totNumPages} style={{maxWidth: '80px'}}
+                      type='text' autoComplete='off' size='sm'
+                      placeholder={'1..' + totNumPages} style={{maxWidth: '80px'}}
                       onInput={(event) => {
-                        if (event.target.value !== "") {
-                          let pageNum = parseFloat(event.target.value);
-                          if (!event.target.value.includes(",") && !event.target.value.includes(".") &&
+                        if (event.target.value !== '') {
+                          let pageNum = parseFloat(event.target.value)
+                          if (!event.target.value.includes(',') && !event.target.value.includes('.') &&
                             !isNaN(pageNum) && isFinite(pageNum) && pageNum > 0 && pageNum <= totNumPages) {
                             this.setState({
                               activePageTmp: parseFloat(event.target.value),
@@ -198,7 +197,7 @@ function withPaginatedList(WrappedComponent, loadDataPage) {
                         }
                       }}
                     />
-                    <Button variant="outline-primary" size="sm" onClick={() => {
+                    <Button variant='outline-primary' size='sm' onClick={() => {
                       this.goToPage(this.state.activePageTmp)
                     }}>Go</Button>
                   </Form.Group>
@@ -206,16 +205,31 @@ function withPaginatedList(WrappedComponent, loadDataPage) {
               </Col>
             </Row>
             <Row>
-              <Col sm="12">
+              <Col sm='12'>
                 &nbsp;
               </Col>
             </Row>
+            {header !== undefined
+              ? <Row>
+                <Col sm='12'>
+                  <ListGroup>
+                    <ListGroupItem>
+                      <Container fluid>
+                        <Row>
+                          {[...header].map(head =>
+                            <Col sm={head[0]}><strong>{head[1]}</strong></Col>)}
+                        </Row>
+                      </Container>
+                    </ListGroupItem>
+                  </ListGroup>
+                </Col>
+              </Row> : null}
             <Row>
-              <Col sm="12">
+              <Col sm='12'>
                 <ListGroup>
                   {[...this.state.elements].map(element =>
                     <ListGroupItem>
-                      <WrappedComponent element={element}/>
+                      <WrappedComponent element={element} />
                     </ListGroupItem>)
                   }
                 </ListGroup>
@@ -224,9 +238,9 @@ function withPaginatedList(WrappedComponent, loadDataPage) {
             {numElemPerPageSelector}
           </LoadingOverlay>
         </Container>
-      );
+      )
     }
   }
 }
 
-export default withPaginatedList;
+export default withPaginatedList
