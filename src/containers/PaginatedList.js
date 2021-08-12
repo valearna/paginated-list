@@ -52,7 +52,7 @@ const PaginatedList = ({WrappedComponent, fetchItemsFnc, header, activePageNum, 
               ? <ListGroup>
                 {[...query.data.items].map(item =>
                   <ListGroupItem>
-                    <WrappedComponent element={item} />
+                    <WrappedComponent item={item} />
                   </ListGroupItem>)
                 }
               </ListGroup> : null}

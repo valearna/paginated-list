@@ -3,14 +3,14 @@ import PropTypes from 'prop-types'
 
 import withPaginatedList from 'paginated-list'
 
-const Element = ({element}) => {
+const Element = ({item}) => {
   return (
-    <span>{element}</span>
+    <span>{item}</span>
   )
 }
 
 Element.propTypes = {
-  element: PropTypes.string.isRequired
+  item: PropTypes.string.isRequired
 }
 
 const App = () => {
