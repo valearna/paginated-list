@@ -1,12 +1,11 @@
 import React from 'react'
 import {Pagination} from 'react-bootstrap'
 import PropTypes from 'prop-types'
-import {getActivePageNum, getNumItemsPerPage, getTotalNumItems} from '../redux/selector'
+import {getActivePageNum, getMaxNumPagesToDisplay, getNumItemsPerPage, getTotalNumItems} from '../redux/selector'
 import {connect} from 'react-redux'
 import {goToFirstPage, goToLastPage, goToNextPage, goToPage, goToPrevPage} from '../redux/actions'
 
-const ArrowsAndNumbers = ({totNumItems, activePageNum, numItemsPerPage, goToFirstPage, goToNextPage, goToPrevPage, goToLastPage, goToPage}) => {
-  const maxNumPagesToDisplay = 5
+const ArrowsAndNumbers = ({totNumItems, activePageNum, numItemsPerPage, maxNumPagesToDisplay, goToFirstPage, goToNextPage, goToPrevPage, goToLastPage, goToPage}) => {
   const totNumPages = Math.ceil(totNumItems / numItemsPerPage)
   const firstDisplayedPage = Math.max(Math.min(activePageNum - Math.floor(maxNumPagesToDisplay / 2), totNumPages - maxNumPagesToDisplay + 1), 1)
   const lastDisplayedPage = Math.min(totNumPages, firstDisplayedPage + maxNumPagesToDisplay - 1)
@@ -39,6 +38,7 @@ ArrowsAndNumbers.propTypes = {
   totNumItems: PropTypes.number.isRequired,
   activePageNum: PropTypes.number.isRequired,
   numItemsPerPage: PropTypes.number.isRequired,
+  maxNumPagesToDisplay: PropTypes.number.isRequired,
   goToNextPage: PropTypes.func,
   goToPrevPage: PropTypes.func,
   goToFirstPage: PropTypes.func,
@@ -49,7 +49,8 @@ ArrowsAndNumbers.propTypes = {
 const mapStateToProps = state => ({
   totNumItems: getTotalNumItems(state),
   activePageNum: getActivePageNum(state),
-  numItemsPerPage: getNumItemsPerPage(state)
+  numItemsPerPage: getNumItemsPerPage(state),
+  maxNumPagesToDisplay: getMaxNumPagesToDisplay(state)
 })
 
 export default connect(mapStateToProps, {
