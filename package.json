@@ -62,7 +62,12 @@
     "dist"
   ],
   "dependencies": {
+    "@reduxjs/toolkit": "^1.6.1",
     "react-bootstrap": "^1.0.0-beta.17",
-    "react-loading-overlay": "^1.0.1"
+    "react-loading-overlay": "^1.0.1",
+    "react-query": "^3.19.2",
+    "react-redux": "^7.2.4",
+    "redux": "^4.1.1",
+    "redux-thunk": "^2.3.0"
   }
 }

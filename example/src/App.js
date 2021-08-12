@@ -1,48 +1,34 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import withPaginatedList from 'paginated-list'
 
-class Element extends React.Component {
-  static get propTypes() {
-    return {
-      element: PropTypes.any
-    }
-  }
-  render() {
-    return (
-      <span>{this.props.element}</span>
-    )
-  }
+const Element = ({element}) => {
+  return (
+    <span>{element}</span>
+  )
 }
 
-export default class App extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      elements: ['Test1', 'Test2', 'Test3', 'Test4', 'Test5', 'Test6', 'Test7', 'Test8'],
-      elemPerPage: 5
-    }
-  }
+Element.propTypes = {
+  element: PropTypes.string.isRequired
+}
 
-  render () {
-    const PaginatedList = withPaginatedList(Element, (offset) => {
-      return new Promise((resolve, reject) => {
-        if (this.state.elements.length > offset) {
-          resolve({
-            elements: this.state.elements.slice(offset, offset + this.state.elemPerPage),
-            totNumElements: this.state.elements.length
-          })
-        } else {
-          resolve({elements: [], totNumElements: 0})
-        }
-      }
-      )
+const App = () => {
+  const elements = ['Test1', 'Test2', 'Test3', 'Test4', 'Test5', 'Test6', 'Test7', 'Test8']
+
+  const PaginatedList = withPaginatedList(Element, (offset, limit) => {
+    return new Promise((resolve, reject) => {
+      resolve({
+        items: elements.slice(offset, offset + limit),
+        totNumItems: elements.length
+      })
     })
-    return (
-      <div>
-        <PaginatedList elemPerPage={this.state.elemPerPage} setNumElemPerPageCallback={(num) => this.setState({elemPerPage: num})} showNumElemPerPageSelector />
-      </div>
-    )
-  }
+  })
+  return (
+    <div>
+      <PaginatedList />
+    </div>
+  )
 }
+
+export default App
