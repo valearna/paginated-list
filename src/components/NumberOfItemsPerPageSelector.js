@@ -1,64 +1,54 @@
-import React from 'react'
+import React, {useState} from 'react'
+import {Button, Form, FormControl} from 'react-bootstrap'
+import PropTypes from 'prop-types'
+import {goToPage} from '../redux/actions'
+import {connect} from 'react-redux'
+import {getNumItemsPerPage, getTotalNumItems} from '../redux/selector'
 
-const NumberOfItemsPerPageSelector = () => {
+const NumberOfItemsPerPageSelector = ({totNumItems, numItemsPerPage, goToPage}) => {
+  const [activePageTmp, setActivePageTmp] = useState(undefined)
+  const totNumPages = Math.ceil(totNumItems / numItemsPerPage)
   return (
-    <Container fluid>
-      <Row>
-        <Col>
-          &nbsp;
-        </Col>
-      </Row>
-      <Row>
-        <Col sm='12'>
-          <Container fluid>
-            <Row>
-              <Col sm="12">
-                <Form onSubmit={e => e.preventDefault()} inline>
-                  <FormGroup controlId="formValidationError2"
-                             validationState={this.state.countValidationState}>
-                    <Form.Label>Elements per page: &nbsp;</Form.Label>
-                    <FormControl
-                      type="text" autoComplete="off" maxLength="3" size="sm"
-                      placeholder={this.state.elemPerPage}
-                      onInput={(event) => {
-                        if (event.target.value !== "" && !isNaN(parseFloat(event.target.value)) &&
-                          isFinite(event.target.value) && parseFloat(event.target.value) > 0) {
-                          this.setState({
-                            elemPerPage: event.target.value,
-                            countValidationState: null
-                          })
-                        } else if (event.target.value !== "") {
-                          this.setState({
-                            countValidationState: "error"
-                          })
-                        } else {
-                          this.setState({
-                            countValidationState: null
-                          })
-                        }
-                      }}
-                      onKeyPress={(target) => {
-                        if (target.key === 'Enter' &&
-                          this.state.elemPerPage > 0) {
-                          this.props.setNumElemPerPageCallback(parseInt(this.state.elemPerPage));
-                        }
-                      }}
-                    />
-                    <Button variant="outline-primary" size="sm" onClick={() => {
-                      if (
-                        this.state.elemPerPage > 0) {
-                        this.props.setNumElemPerPageCallback(parseInt(this.state.elemPerPage));
-                      }
-                    }}>Refresh</Button>
-                  </FormGroup>
-                </Form>
-              </Col>
-            </Row>
-          </Container>
-        </Col>
-      </Row>
-    </Container>
+    <div>
+      Go to page:
+      <Form onSubmit={e => e.preventDefault()} inline>
+        <Form.Group>
+          <FormControl
+            type='text' autoComplete='off' size='sm'
+            placeholder={'1..' + totNumPages} style={{maxWidth: '80px'}}
+            onInput={(event) => {
+              let pageNum = parseFloat(event.target.value)
+              if (!event.target.value.includes(',') && !event.target.value.includes('.') &&
+                !isNaN(pageNum) && isFinite(pageNum) && pageNum > 0 && pageNum <= totNumPages) {
+                setActivePageTmp(parseFloat(event.target.value))
+              } else {
+                setActivePageTmp(null)
+              }
+            }}
+            onKeyPress={(target) => {
+              if (target.key === 'Enter') {
+                goToPage(activePageTmp)
+              }
+            }}
+          />
+          <Button variant='outline-primary' size='sm' onClick={() => {
+            goToPage(activePageTmp)
+          }}>Go</Button>
+        </Form.Group>
+      </Form>
+    </div>
   )
 }
 
-export default NumberOfItemsPerPageSelector
+NumberOfItemsPerPageSelector.propTypes = {
+  totNumItems: PropTypes.number.isRequired,
+  numItemsPerPage: PropTypes.number.isRequired,
+  goToPage: PropTypes.func
+}
+
+const mapStateToProps = state => ({
+  totNumItems: getTotalNumItems(state),
+  numItemsPerPage: getNumItemsPerPage(state)
+})
+
+export default connect(mapStateToProps, {goToPage})(NumberOfItemsPerPageSelector)

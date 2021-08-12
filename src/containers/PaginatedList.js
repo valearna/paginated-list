@@ -1,13 +1,15 @@
 import React from 'react'
-import {Col, Container, ListGroup, ListGroupItem, Row} from 'react-bootstrap'
+import {ListGroup, ListGroupItem} from 'react-bootstrap'
 import LoadingOverlay from 'react-loading-overlay'
 import PropTypes from 'prop-types'
 import {useQuery} from 'react-query'
-import Pagination from '../components/PaginationComponents'
 import Header from '../components/Header'
 import {connect} from 'react-redux'
 import {getActivePageNum, getNumItemsPerPage} from '../redux/selector'
 import {setTotalNumItems} from '../redux/actions'
+import TotNumItems from '../components/TotNumItems'
+import ArrowsAndNumbers from '../components/ArrowsAndNumbers'
+import NumberOfItemsPerPageSelector from '../components/NumberOfItemsPerPageSelector'
 
 const PaginatedList = ({WrappedComponent, fetchItemsFnc, header, activePageNum, numItemsPerPage, setTotalNumItems}) => {
   const count = activePageNum * numItemsPerPage
@@ -18,7 +20,7 @@ const PaginatedList = ({WrappedComponent, fetchItemsFnc, header, activePageNum, 
   }
 
   return (
-    <Container fluid>
+    <div>
       <LoadingOverlay
         active={query.isLoading}
         spinner
@@ -30,36 +32,26 @@ const PaginatedList = ({WrappedComponent, fetchItemsFnc, header, activePageNum, 
           })
         }}
       >
-        <Row>
-          <Col>
-            <Pagination />
-          </Col>
-        </Row>
-        <Row>
-          <Col sm='12'>
-            &nbsp;
-          </Col>
-        </Row>
+        <TotNumItems />
+        <ArrowsAndNumbers />
+        <NumberOfItemsPerPageSelector />
+        <br />
         {header !== undefined
-          ? <Row>
-            <Col>
-              <Header header={header} />
-            </Col>
-          </Row> : null}
-        <Row>
-          <Col sm='12'>
-            {query.isSuccess
-              ? <ListGroup>
-                {[...query.data.items].map(item =>
-                  <ListGroupItem>
-                    <WrappedComponent item={item} />
-                  </ListGroupItem>)
-                }
-              </ListGroup> : null}
-          </Col>
-        </Row>
+          ? <Header header={header} />
+          : null
+        }
+        {query.isSuccess
+          ? <ListGroup>
+            {[...query.data.items].map((item, index) =>
+              <ListGroupItem key={index}>
+                <WrappedComponent item={item} />
+              </ListGroupItem>)
+            }
+          </ListGroup>
+          : null
+        }
       </LoadingOverlay>
-    </Container>
+    </div>
   )
 }
 
