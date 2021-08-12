@@ -9,10 +9,10 @@ import {connect} from 'react-redux'
 import {getActivePageNum, getNumItemsPerPage} from '../redux/selector'
 import {setTotalNumItems} from '../redux/actions'
 
-const PaginatedList = ({WrappedComponent, fetchItems, header, activePageNum, numItemsPerPage, setTotalNumItems}) => {
+const PaginatedList = ({WrappedComponent, fetchItemsFnc, header, activePageNum, numItemsPerPage, setTotalNumItems}) => {
   const count = activePageNum * numItemsPerPage
   const limit = numItemsPerPage
-  const query = useQuery(['items', {count, limit}], () => fetchItems(count, limit))
+  const query = useQuery(['items', {count, limit}], () => fetchItemsFnc(count, limit))
   if (query.isSuccess) {
     setTotalNumItems(query.data.totNumItems)
   }
@@ -65,7 +65,7 @@ const PaginatedList = ({WrappedComponent, fetchItems, header, activePageNum, num
 
 PaginatedList.propTypes = {
   WrappedComponent: PropTypes.any.isRequired,
-  fetchItems: PropTypes.func.isRequired,
+  fetchItemsFnc: PropTypes.func.isRequired,
   header: PropTypes.arrayOf(PropTypes.shape({
     colWidth: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired
