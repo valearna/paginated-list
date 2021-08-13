@@ -1,8 +1,8 @@
 import React from 'react'
-import {Col, Container, ListGroup, ListGroupItem, Row} from 'react-bootstrap'
+import { Col, Container, ListGroup, ListGroupItem, Row } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 
-const Header = ({header}) => {
+const Header = ({ header }) => {
   return (
     <ListGroup>
       <ListGroupItem>

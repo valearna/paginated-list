@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {Badge, Form} from 'react-bootstrap'
-import {getTotalNumItems} from '../redux/selector'
-import {connect} from 'react-redux'
+import { Badge, Form } from 'react-bootstrap'
+import { getTotalNumItems } from '../redux/selector'
+import { connect } from 'react-redux'
 
-const TotNumItems = ({totNumItems}) => {
+const TotNumItems = ({ totNumItems }) => {
   return (
     <div>
       <Form.Label>total number of items:</Form.Label> <Badge variant='secondary'>{totNumItems}</Badge>

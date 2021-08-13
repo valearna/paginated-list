@@ -1,19 +1,19 @@
-import React, {useEffect} from 'react'
-import {ListGroup, ListGroupItem, Spinner} from 'react-bootstrap'
+import React, { useEffect } from 'react'
+import { ListGroup, ListGroupItem, Spinner } from 'react-bootstrap'
 import PropTypes from 'prop-types'
-import {useQuery} from 'react-query'
+import { useQuery } from 'react-query'
 import Header from '../components/Header'
-import {connect} from 'react-redux'
-import {getActivePageNum} from '../redux/selector'
-import {setMaxNumPagesToDisplay, setNumItemsPerPage, setTotalNumItems} from '../redux/actions'
+import { connect } from 'react-redux'
+import { getActivePageNum } from '../redux/selector'
+import { setMaxNumPagesToDisplay, setNumItemsPerPage, setTotalNumItems } from '../redux/actions'
 import TotNumItems from '../components/TotNumItems'
 import ArrowsAndNumbers from '../components/ArrowsAndNumbers'
 import NumberOfItemsPerPageSelector from '../components/NumberOfItemsPerPageSelector'
 
-const PaginatedList = ({WrappedComponent, fetchItemsFnc, header, numItemsPerPage, maxNumPagesToDisplay, activePageNum, setTotalNumItems, setNumItemsPerPage, setMaxNumPagesToDisplay}) => {
+const PaginatedList = ({ WrappedComponent, fetchItemsFnc, header, numItemsPerPage, maxNumPagesToDisplay, activePageNum, setTotalNumItems, setNumItemsPerPage, setMaxNumPagesToDisplay }) => {
   const count = (activePageNum - 1) * numItemsPerPage
   const limit = numItemsPerPage
-  const query = useQuery(['items', {count, limit}], () => fetchItemsFnc(count, limit))
+  const query = useQuery(['items', { count, limit }], () => fetchItemsFnc(count, limit))
   if (query.isSuccess) {
     setTotalNumItems(query.data.totNumItems)
   }
