@@ -23,7 +23,7 @@ const App = () => {
         totNumItems: elements.length
       });
     });
-  }, 2, 5);
+  }, 2, 5, true);
   return (
     <div>
       <PaginatedList />

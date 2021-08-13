@@ -11,7 +11,7 @@ import ArrowsAndNumbers from '../components/ArrowsAndNumbers';
 import GotoPage from '../components/GotoPage';
 import NumItemsPerPage from '../components/NumItemsPerPage';
 
-const PaginatedList = ({ WrappedComponent, fetchItemsFnc, header, numItemsPerPageProp, maxNumPagesToDisplayProp, numItemsPerPage, activePageNum, setTotalNumItems, setNumItemsPerPage, setMaxNumPagesToDisplay }) => {
+const PaginatedList = ({ WrappedComponent, fetchItemsFnc, header, showNumItemsPerPage, numItemsPerPageProp, maxNumPagesToDisplayProp, numItemsPerPage, activePageNum, setTotalNumItems, setNumItemsPerPage, setMaxNumPagesToDisplay }) => {
   const count = (activePageNum - 1) * numItemsPerPage;
   const limit = numItemsPerPage;
   const query = useQuery(['items', { count, limit }], () => fetchItemsFnc(count, limit));
@@ -28,8 +28,7 @@ const PaginatedList = ({ WrappedComponent, fetchItemsFnc, header, numItemsPerPag
         ? <Spinner animation='grow' />
         : <div>
           <TotNumItems />
-          <NumItemsPerPage />
-          <br />
+          {showNumItemsPerPage ? <div><NumItemsPerPage /><br/></div> : null}
           {header !== undefined
             ? <Header header={header} />
             : null
@@ -60,6 +59,7 @@ PaginatedList.propTypes = {
     colWidth: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired
   })),
+  showNumItemsPerPage: PropTypes.bool,
   numItemsPerPageProp: PropTypes.number,
   numItemsPerPage: PropTypes.number.isRequired,
   maxNumPagesToDisplayProp: PropTypes.number,
@@ -67,6 +67,10 @@ PaginatedList.propTypes = {
   setTotalNumItems: PropTypes.func,
   setNumItemsPerPage: PropTypes.func,
   setMaxNumPagesToDisplay: PropTypes.func
+};
+
+PaginatedList.defaultProps = {
+  showNumItemsPerPage: false
 };
 
 const mapStateToProps = state => ({
