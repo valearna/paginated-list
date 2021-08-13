@@ -1,24 +1,24 @@
-import React from 'react'
-import { Pagination } from 'react-bootstrap'
-import PropTypes from 'prop-types'
-import { getActivePageNum, getMaxNumPagesToDisplay, getNumItemsPerPage, getTotalNumItems } from '../redux/selector'
-import { connect } from 'react-redux'
-import { goToFirstPage, goToLastPage, goToNextPage, goToPage, goToPrevPage } from '../redux/actions'
+import React from 'react';
+import { Pagination } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import { getActivePageNum, getMaxNumPagesToDisplay, getNumItemsPerPage, getTotalNumItems } from '../redux/selector';
+import { connect } from 'react-redux';
+import { goToFirstPage, goToLastPage, goToNextPage, goToPage, goToPrevPage } from '../redux/actions';
 
 const ArrowsAndNumbers = ({ totNumItems, activePageNum, numItemsPerPage, maxNumPagesToDisplay, goToFirstPage, goToNextPage, goToPrevPage, goToLastPage, goToPage }) => {
-  const totNumPages = Math.ceil(totNumItems / numItemsPerPage)
-  const firstDisplayedPage = Math.max(Math.min(activePageNum - Math.floor(maxNumPagesToDisplay / 2), totNumPages - maxNumPagesToDisplay + 1), 1)
-  const lastDisplayedPage = Math.min(totNumPages, firstDisplayedPage + maxNumPagesToDisplay - 1)
-  const items = []
+  const totNumPages = Math.ceil(totNumItems / numItemsPerPage);
+  const firstDisplayedPage = Math.max(Math.min(activePageNum - Math.floor(maxNumPagesToDisplay / 2), totNumPages - maxNumPagesToDisplay + 1), 1);
+  const lastDisplayedPage = Math.min(totNumPages, firstDisplayedPage + maxNumPagesToDisplay - 1);
+  const items = [];
   if (firstDisplayedPage > 1) {
-    items.push(<Pagination.Ellipsis onClick={() => goToPage(firstDisplayedPage - 1)} />)
+    items.push(<Pagination.Ellipsis onClick={() => goToPage(firstDisplayedPage - 1)} />);
   }
   for (let number = firstDisplayedPage; number <= lastDisplayedPage; number++) {
     items.push(
       <Pagination.Item key={number} active={number === activePageNum} onClick={() => goToPage(number)} >
         {number}
       </Pagination.Item>
-    )
+    );
   }
 
   return (
@@ -31,8 +31,8 @@ const ArrowsAndNumbers = ({ totNumItems, activePageNum, numItemsPerPage, maxNumP
         <Pagination.Last onClick={goToLastPage} />
       </Pagination>
     </div>
-  )
-}
+  );
+};
 
 ArrowsAndNumbers.propTypes = {
   totNumItems: PropTypes.number.isRequired,
@@ -44,14 +44,14 @@ ArrowsAndNumbers.propTypes = {
   goToFirstPage: PropTypes.func,
   goToLastPage: PropTypes.func,
   goToPage: PropTypes.func
-}
+};
 
 const mapStateToProps = state => ({
   totNumItems: getTotalNumItems(state),
   activePageNum: getActivePageNum(state),
   numItemsPerPage: getNumItemsPerPage(state),
   maxNumPagesToDisplay: getMaxNumPagesToDisplay(state)
-})
+});
 
 export default connect(mapStateToProps, {
   goToFirstPage,
@@ -59,4 +59,4 @@ export default connect(mapStateToProps, {
   goToPrevPage,
   goToLastPage,
   goToPage
-})(ArrowsAndNumbers)
+})(ArrowsAndNumbers);

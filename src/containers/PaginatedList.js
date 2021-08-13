@@ -1,25 +1,26 @@
-import React, { useEffect } from 'react'
-import { ListGroup, ListGroupItem, Spinner } from 'react-bootstrap'
-import PropTypes from 'prop-types'
-import { useQuery } from 'react-query'
-import Header from '../components/Header'
-import { connect } from 'react-redux'
-import { getActivePageNum } from '../redux/selector'
-import { setMaxNumPagesToDisplay, setNumItemsPerPage, setTotalNumItems } from '../redux/actions'
-import TotNumItems from '../components/TotNumItems'
-import ArrowsAndNumbers from '../components/ArrowsAndNumbers'
-import NumberOfItemsPerPageSelector from '../components/NumberOfItemsPerPageSelector'
+import React, { useEffect } from 'react';
+import { ListGroup, ListGroupItem, Spinner } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import { useQuery } from 'react-query';
+import Header from '../components/Header';
+import { connect } from 'react-redux';
+import { getActivePageNum, getNumItemsPerPage } from '../redux/selector'
+import { setMaxNumPagesToDisplay, setNumItemsPerPage, setTotalNumItems } from '../redux/actions';
+import TotNumItems from '../components/TotNumItems';
+import ArrowsAndNumbers from '../components/ArrowsAndNumbers';
+import GotoPage from '../components/GotoPage';
+import NumItemsPerPage from '../components/NumItemsPerPage';
 
-const PaginatedList = ({ WrappedComponent, fetchItemsFnc, header, numItemsPerPage, maxNumPagesToDisplay, activePageNum, setTotalNumItems, setNumItemsPerPage, setMaxNumPagesToDisplay }) => {
-  const count = (activePageNum - 1) * numItemsPerPage
-  const limit = numItemsPerPage
-  const query = useQuery(['items', { count, limit }], () => fetchItemsFnc(count, limit))
+const PaginatedList = ({ WrappedComponent, fetchItemsFnc, header, numItemsPerPageProp, maxNumPagesToDisplayProp, numItemsPerPage, activePageNum, setTotalNumItems, setNumItemsPerPage, setMaxNumPagesToDisplay }) => {
+  const count = (activePageNum - 1) * numItemsPerPage;
+  const limit = numItemsPerPage;
+  const query = useQuery(['items', { count, limit }], () => fetchItemsFnc(count, limit));
   if (query.isSuccess) {
-    setTotalNumItems(query.data.totNumItems)
+    setTotalNumItems(query.data.totNumItems);
   }
 
-  useEffect(() => { setNumItemsPerPage(numItemsPerPage) }, [numItemsPerPage])
-  useEffect(() => { setMaxNumPagesToDisplay(maxNumPagesToDisplay) }, [maxNumPagesToDisplay])
+  useEffect(() => { setNumItemsPerPage(numItemsPerPageProp); }, [numItemsPerPageProp]);
+  useEffect(() => { setMaxNumPagesToDisplay(maxNumPagesToDisplayProp); }, [maxNumPagesToDisplayProp]);
 
   return (
     <div>
@@ -27,8 +28,7 @@ const PaginatedList = ({ WrappedComponent, fetchItemsFnc, header, numItemsPerPag
         ? <Spinner animation='grow' />
         : <div>
           <TotNumItems />
-          <ArrowsAndNumbers />
-          <NumberOfItemsPerPageSelector />
+          <NumItemsPerPage />
           <br />
           {header !== undefined
             ? <Header header={header} />
@@ -46,9 +46,12 @@ const PaginatedList = ({ WrappedComponent, fetchItemsFnc, header, numItemsPerPag
           }
         </div>
       }
+      <br />
+      <ArrowsAndNumbers />
+      <GotoPage />
     </div>
-  )
-}
+  );
+};
 
 PaginatedList.propTypes = {
   WrappedComponent: PropTypes.any.isRequired,
@@ -57,20 +60,22 @@ PaginatedList.propTypes = {
     colWidth: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired
   })),
-  numItemsPerPage: PropTypes.number,
-  maxNumPagesToDisplay: PropTypes.number,
+  numItemsPerPageProp: PropTypes.number,
+  numItemsPerPage: PropTypes.number.isRequired,
+  maxNumPagesToDisplayProp: PropTypes.number,
   activePageNum: PropTypes.number,
   setTotalNumItems: PropTypes.func,
   setNumItemsPerPage: PropTypes.func,
   setMaxNumPagesToDisplay: PropTypes.func
-}
+};
 
 const mapStateToProps = state => ({
-  activePageNum: getActivePageNum(state)
-})
+  activePageNum: getActivePageNum(state),
+  numItemsPerPage: getNumItemsPerPage(state)
+});
 
 export default connect(mapStateToProps, {
   setTotalNumItems,
   setNumItemsPerPage,
   setMaxNumPagesToDisplay
-})(PaginatedList)
+})(PaginatedList);
