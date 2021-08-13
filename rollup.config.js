@@ -33,11 +33,11 @@ export default {
       exclude: 'node_modules/**',
       plugins: [ 'external-helpers' ]
     }),
-    resolve(),
     commonjs({
       include: 'node_modules/**',
       namedExports: {
         'node_modules/react-is/index.js': ['isValidElementType', 'isContextConsumer']
-      }})
+      }
+    })
   ]
 }

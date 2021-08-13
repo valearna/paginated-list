@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react'
-import {ListGroup, ListGroupItem} from 'react-bootstrap'
-import LoadingOverlay from 'react-loading-overlay'
+import {ListGroup, ListGroupItem, Spinner} from 'react-bootstrap'
 import PropTypes from 'prop-types'
 import {useQuery} from 'react-query'
 import Header from '../components/Header'
@@ -24,36 +23,29 @@ const PaginatedList = ({WrappedComponent, fetchItemsFnc, header, numItemsPerPage
 
   return (
     <div>
-      <LoadingOverlay
-        active={query.isLoading}
-        spinner
-        text='Loading data...'
-        styles={{
-          overlay: (base) => ({
-            ...base,
-            background: 'rgba(65,105,225,0.5)'
-          })
-        }}
-      >
-        <TotNumItems />
-        <ArrowsAndNumbers />
-        <NumberOfItemsPerPageSelector />
-        <br />
-        {header !== undefined
-          ? <Header header={header} />
-          : null
-        }
-        {query.isSuccess
-          ? <ListGroup>
-            {[...query.data.items].map((item, index) =>
-              <ListGroupItem key={index}>
-                <WrappedComponent item={item} />
-              </ListGroupItem>)
-            }
-          </ListGroup>
-          : null
-        }
-      </LoadingOverlay>
+      {query.isLoading
+        ? <Spinner animation='grow' />
+        : <div>
+          <TotNumItems />
+          <ArrowsAndNumbers />
+          <NumberOfItemsPerPageSelector />
+          <br />
+          {header !== undefined
+            ? <Header header={header} />
+            : null
+          }
+          {query.isSuccess
+            ? <ListGroup>
+              {[...query.data.items].map((item, index) =>
+                <ListGroupItem key={index}>
+                  <WrappedComponent item={item} />
+                </ListGroupItem>)
+              }
+            </ListGroup>
+            : null
+          }
+        </div>
+      }
     </div>
   )
 }
