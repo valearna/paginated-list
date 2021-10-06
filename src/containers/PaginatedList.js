@@ -3,31 +3,33 @@ import { ListGroup, ListGroupItem, Spinner } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import Header from '../components/Header';
-import { connect } from 'react-redux';
-import { getActivePageNum, getNumItemsPerPage } from '../redux/selector'
-import { setMaxNumPagesToDisplay, setNumItemsPerPage, setTotalNumItems } from '../redux/actions';
+import { useDispatch, useSelector } from 'react-redux';
 import TotNumItems from '../components/TotNumItems';
 import ArrowsAndNumbers from '../components/ArrowsAndNumbers';
 import GotoPage from '../components/GotoPage';
 import NumItemsPerPage from '../components/NumItemsPerPage';
+import { setMaxNumPagesToDisplay, setNumItemsPerPage, setTotalNumItems } from '../redux/actions';
 
-const PaginatedList = ({ WrappedComponent, fetchItemsFnc, header, showNumItemsPerPage, numItemsPerPageProp, maxNumPagesToDisplayProp, numItemsPerPage, activePageNum, setTotalNumItems, setNumItemsPerPage, setMaxNumPagesToDisplay }) => {
+const PaginatedList = ({ WrappedComponent, fetchItemsFnc, header, showNumItemsPerPage, showTotalNumItems, numItemsPerPageProp, maxNumPagesToDisplayProp }) => {
+  const dispatch = useDispatch();
+  const activePageNum = useSelector((state) => state.activePageNum);
+  const numItemsPerPage = useSelector((state) => state.numItemsPerPage);
   const count = (activePageNum - 1) * numItemsPerPage;
   const limit = numItemsPerPage;
   const query = useQuery(['items', { count, limit }], () => fetchItemsFnc(count, limit));
   if (query.isSuccess) {
-    setTotalNumItems(query.data.totNumItems);
+    dispatch(setTotalNumItems(query.data.totNumItems));
   }
 
-  useEffect(() => { setNumItemsPerPage(numItemsPerPageProp); }, [numItemsPerPageProp]);
-  useEffect(() => { setMaxNumPagesToDisplay(maxNumPagesToDisplayProp); }, [maxNumPagesToDisplayProp]);
+  useEffect(() => { dispatch(setNumItemsPerPage(numItemsPerPageProp)); }, [numItemsPerPageProp]);
+  useEffect(() => { dispatch(setMaxNumPagesToDisplay(maxNumPagesToDisplayProp)); }, [maxNumPagesToDisplayProp]);
 
   return (
     <div>
       {query.isLoading
         ? <Spinner animation='grow' />
         : <div>
-          <TotNumItems />
+          {showTotalNumItems ? <TotNumItems /> : null}
           {showNumItemsPerPage ? <div><NumItemsPerPage /><br/></div> : null}
           {header !== undefined
             ? <Header header={header} />
@@ -60,26 +62,14 @@ PaginatedList.propTypes = {
     title: PropTypes.string.isRequired
   })),
   showNumItemsPerPage: PropTypes.bool,
+  showTotalNumItems: PropTypes.bool,
   numItemsPerPageProp: PropTypes.number,
-  numItemsPerPage: PropTypes.number.isRequired,
-  maxNumPagesToDisplayProp: PropTypes.number,
-  activePageNum: PropTypes.number,
-  setTotalNumItems: PropTypes.func,
-  setNumItemsPerPage: PropTypes.func,
-  setMaxNumPagesToDisplay: PropTypes.func
+  maxNumPagesToDisplayProp: PropTypes.number
 };
 
 PaginatedList.defaultProps = {
-  showNumItemsPerPage: false
+  showNumItemsPerPage: false,
+  showTotalNumItems: true
 };
 
-const mapStateToProps = state => ({
-  activePageNum: getActivePageNum(state),
-  numItemsPerPage: getNumItemsPerPage(state)
-});
-
-export default connect(mapStateToProps, {
-  setTotalNumItems,
-  setNumItemsPerPage,
-  setMaxNumPagesToDisplay
-})(PaginatedList);
+export default PaginatedList;
