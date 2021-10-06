@@ -5,14 +5,14 @@ import store from './redux/store';
 import { Provider } from 'react-redux';
 import PropTypes from 'prop-types';
 
-const withPaginatedList = (WrappedComponent, fetchItemsFnc, numItemsPerPage, maxNumPagesToDisplay, showNumItemsPerPage, header) => {
+const withPaginatedList = (WrappedComponent, fetchItemsFnc, numItemsPerPage, maxNumPagesToDisplay, showNumItemsPerPage, showTotalNumItems, header) => {
   const queryClient = new QueryClient();
 
   return function () {
     return (
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
-          <PaginatedList fetchItemsFnc={fetchItemsFnc} WrappedComponent={WrappedComponent} header={header} numItemsPerPageProp={numItemsPerPage} maxNumPagesToDisplayProp={maxNumPagesToDisplay} showNumItemsPerPage={showNumItemsPerPage}/>
+          <PaginatedList fetchItemsFnc={fetchItemsFnc} WrappedComponent={WrappedComponent} header={header} numItemsPerPageProp={numItemsPerPage} maxNumPagesToDisplayProp={maxNumPagesToDisplay} showNumItemsPerPage={showNumItemsPerPage} showTotalNumItems={showTotalNumItems}/>
         </QueryClientProvider>
       </Provider>
     );
