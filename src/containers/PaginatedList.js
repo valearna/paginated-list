@@ -14,6 +14,7 @@ const PaginatedList = ({ WrappedComponent, fetchItemsFnc, header, showNumItemsPe
   const dispatch = useDispatch();
   const activePageNum = useSelector((state) => state.activePageNum);
   const numItemsPerPage = useSelector((state) => state.numItemsPerPage);
+  const totNumElements = useSelector((state) => state.totalNumItems);
   const count = (activePageNum - 1) * numItemsPerPage;
   const limit = numItemsPerPage;
   const query = useQuery(['items', { count, limit }], () => fetchItemsFnc(count, limit));
@@ -27,29 +28,34 @@ const PaginatedList = ({ WrappedComponent, fetchItemsFnc, header, showNumItemsPe
   return (
     <div>
       {query.isLoading
-        ? <Spinner animation='grow' />
+        ? <Spinner animation='grow'/>
         : <div>
-          {showTotalNumItems ? <TotNumItems /> : null}
-          {showNumItemsPerPage ? <div><NumItemsPerPage /><br/></div> : null}
-          {header !== undefined
-            ? <Header header={header} />
-            : null
-          }
-          {query.isSuccess
-            ? <ListGroup>
-              {[...query.data.items].map((item, index) =>
-                <ListGroupItem key={index}>
-                  <WrappedComponent item={item} />
-                </ListGroupItem>)
+          {totNumElements > 0
+            ? <div>
+              {showTotalNumItems ? <TotNumItems/> : null}
+              {showNumItemsPerPage ? <div><NumItemsPerPage/><br/></div> : null}
+              {header !== undefined
+                ? <Header header={header}/>
+                : null
               }
-            </ListGroup>
+              {query.isSuccess
+                ? <ListGroup>
+                  {[...query.data.items].map((item, index) =>
+                    <ListGroupItem key={index}>
+                      <WrappedComponent item={item}/>
+                    </ListGroupItem>)
+                  }
+                </ListGroup>
+                : null
+              }
+              <br />
+              <ArrowsAndNumbers />
+              <GotoPage />
+            </div>
             : null
           }
         </div>
       }
-      <br />
-      <ArrowsAndNumbers />
-      <GotoPage />
     </div>
   );
 };
