@@ -17,6 +17,7 @@ const PaginatedList = ({ WrappedComponent, fetchItemsFnc, header, showNumItemsPe
   const totNumElements = useSelector((state) => state.totalNumItems);
   const count = (activePageNum - 1) * numItemsPerPage;
   const limit = numItemsPerPage;
+  const totNumPages = Math.ceil(totNumElements / numItemsPerPage);
   const query = useQuery(['items', { count, limit }], () => fetchItemsFnc(count, limit));
   if (query.isSuccess) {
     dispatch(setTotalNumItems(query.data.totNumItems));
@@ -48,9 +49,14 @@ const PaginatedList = ({ WrappedComponent, fetchItemsFnc, header, showNumItemsPe
                 </ListGroup>
                 : null
               }
-              <br />
-              <ArrowsAndNumbers />
-              <GotoPage />
+              {totNumPages > 1
+                ? <div>
+                  <br/>
+                  <ArrowsAndNumbers />
+                  <GotoPage />
+                </div>
+                : null
+              }
             </div>
             : null
           }
