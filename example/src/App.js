@@ -24,6 +24,7 @@ const App = () => {
       });
     });
   }, 2, 5, true);
+
   return (
     <div>
       <PaginatedList />

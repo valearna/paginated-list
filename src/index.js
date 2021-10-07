@@ -1,12 +1,15 @@
 import React from 'react';
 import PaginatedList from './containers/PaginatedList';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import store from './redux/store';
 import { Provider } from 'react-redux';
 import PropTypes from 'prop-types';
+import { applyMiddleware, createStore } from 'redux';
+import reducer from './redux/reducer';
+import thunk from 'redux-thunk';
 
 const withPaginatedList = (WrappedComponent, fetchItemsFnc, numItemsPerPage, maxNumPagesToDisplay, showNumItemsPerPage, showTotalNumItems, header) => {
   const queryClient = new QueryClient();
+  const store = createStore(reducer, applyMiddleware(thunk));
 
   return function () {
     return (
